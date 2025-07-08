@@ -1,6 +1,6 @@
 pub struct HepMessage {
-    pub ipprotocol_family: u8,
-    pub ipprotocol_id: u8,
+    pub ip_protocol_family: u8,
+    pub ip_protocol_id: u8,
     pub ip4_source_address: String,
     pub ip4_destination_address: String,
     pub ip6_source_address: String,
