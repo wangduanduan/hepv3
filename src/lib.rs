@@ -62,7 +62,7 @@ pub fn parse_packet(packet: &[u8]) -> Result<HepMessage, ()> {
     //         parse_hep_v1(packet)
     //     }
     // }
-    return  Ok(hep_message);
+    Ok(hep_message);
 }
 
 pub fn add(left: u64, right: u64) -> u64 {
