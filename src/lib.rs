@@ -16,12 +16,36 @@ pub struct HepMessage {
     pub body: String,
 }
 
+pub enum HepVersion {
+    HepV1,
+    HepV2,
+    HepV3,
+    Unknown,
+}
+
+impl std::convert::From<&[u8]> for HepVersion {
+    fn from(b: &[u8]) -> Self {
+        match b {
+            [1, _, _, _] => HepVersion::HepV1,
+            [2, _, _, _] => HepVersion::HepV2,
+            [72, 69, 80, 51] => HepVersion::HepV3,
+            _ => HepVersion::Unknown,
+        }
+    }
+}
+
 const HEP_MIN_PACKET_SIZE:u16 = 6;
 const HEP_MAX_PACKET_SIZE:u16 = u16::MAX;
 
-pub fn parse_packet(packet: &[u8]) -> Result<HepMessage, ()> {
+pub enum HepError {
+    InvalidPacketSize,
+    UnsupportedVersion,
+    UnknownVersion
+}
+
+pub fn parse_packet(packet: &[u8]) -> Result<HepMessage, HepError> {
     if packet.len() < HEP_MIN_PACKET_SIZE as usize || packet.len() > HEP_MAX_PACKET_SIZE as usize {
-        return Err(());
+        return Err(HepError::InvalidPacketSize);
     }
 
     let hep_message = HepMessage {
@@ -42,26 +66,23 @@ pub fn parse_packet(packet: &[u8]) -> Result<HepMessage, ()> {
         body: String::new(),
     };
 
-    // let version = HepVersion::from(&packet[..4]);
+    let version = HepVersion::from(&packet[..4]);
 
-    // match version {
-    //     HepVersion::HepV1 => {
-    //         debug!("HEP Version 1");
-    //         parse_hep_v1(packet)
-    //     }
-    //     HepVersion::HepV2 => {
-    //         debug!("HEP Version 2");
-    //         parse_hep_v2(packet)
-    //     }
-    //     HepVersion::HepV3 => {
-    //         debug!("HEP version 3");
-    //         parse_hep_v3(packet)
-    //     }
-    //     _ => {
-    //         error!("Not matched HEP/EEP.");
-    //         parse_hep_v1(packet)
-    //     }
-    // }
+    match version {
+        HepVersion::HepV1 => {
+            return Err(HepError::UnsupportedVersion);
+        }
+        HepVersion::HepV2 => {
+            return Err(HepError::UnsupportedVersion);
+        }
+        HepVersion::HepV3 => {
+            // parse packet
+            // return Err(HepError::UnsupportedVersion);
+        }
+        HepVersion::Unknown => {
+            return Err(HepError::UnknownVersion);
+        }
+    }
     return Ok(hep_message);
 }
 
