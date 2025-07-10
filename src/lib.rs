@@ -1,3 +1,49 @@
+pub enum ChunkType {
+    IPProtocolFamily, // 1
+	IPProtocolID, // 2
+	IP4SourceAddress, // 3
+	IP4DestinationAddress, // 4
+	IP6SourceAddress, // 5
+	IP6DestinationAddress, // 6
+	SourcePort, // 7
+	DestinationPort, // 8
+	Timestamp, // 9
+	TimestampMicro, // 10
+	ProtocolType, // 11
+	CaptureAgentID, // 12
+	KeepAliveTimer, // 13
+	AuthenticationKey, // 14
+	PacketPayload, // 15
+	CompressedPayload, // 16
+	InternalC, // 17
+    Unsupported //
+}
+
+impl std::convert::From<&[u8]> for ChunkType {
+    fn from(b: &[u8]) -> Self {
+        match b {
+            [0,1] => ChunkType::IPProtocolFamily,
+            [0,2] => ChunkType::IPProtocolID,
+            [0,3] => ChunkType::IP4SourceAddress,
+            [0,4] => ChunkType::IP4DestinationAddress,
+            [0,5] => ChunkType::IP6SourceAddress,
+            [0,6] => ChunkType::IP6DestinationAddress,
+            [0,7] => ChunkType::SourcePort,
+            [0,8] => ChunkType::DestinationPort,
+            [0,9] => ChunkType::Timestamp,
+            [0,10] => ChunkType::TimestampMicro,
+            [0,11] => ChunkType::ProtocolType,
+            [0,12] => ChunkType::CaptureAgentID,
+            [0,13] => ChunkType::KeepAliveTimer,
+            [0,14] => ChunkType::AuthenticationKey,
+            [0,15] => ChunkType::PacketPayload,
+            [0,16] => ChunkType::CompressedPayload,
+            [0,17] => ChunkType::InternalC,
+            _ => ChunkType::Unsupported,
+        }
+    }
+}
+
 pub struct HepMessage {
     pub ip_protocol_family: u8,
     pub ip_protocol_id: u8,
